@@ -1,41 +1,43 @@
-Purpose 
+###**Purpose **
 
 To accelerate research and decision making data needs to be findable, accessible, interoperable, and reusable (FAIR). Multiple federal, state and tribal agencies collect in-stream and riparian habitat metrics to answer management questions specific to their program goals. 
 
-The Aquatic Habitat Analysis package will integrate aquatic habitat data from multiple projects to provide access and analysis of aquatic habitat data status and trend across jurisdictions.  We will provide an analysis package to analyze the status and trends and threshold exceedance for in-stream and riparian habitat metrics based on user’s inputs and access to downloadable data with associated environmental covariates, and metadata for aquatic habitat programs’ data.
+The Aquatic Habitat Analysis package will integrate aquatic habitat data from multiple projects to provide access and analysis of aquatic habitat data status and trend across jurisdictions.  We will provide an analysis package to analyze the status and trends and threshold exceedance for in-stream and riparian habitat metrics based on userâ€™s inputs and access to downloadable data with associated environmental covariates, and metadata for aquatic habitat programsâ€™ data.
 
 
 As a proof of concept for this analysis package, I want to pick 2-3 metrics as a test case to build a data dictionary and design the analysis package infrastructure.  I selected metrics that demonstrate the impact of management decisions, have low measure error (Kershner and Roper 2010 ) and the according to the BLM AIM PROTOCOL, PROTOCOL SHOOTOUT field collection methods are considered comparable between at least 3 of the monitoring programs.
 
 This package will help answer management questions for in-stream and riparian habitat such as:  
-What is the status and trend of aquatic ecosystems based on user defined HUC, State, Forest, BLM Management unit or Tribal boundaries? 
-Determine if aquatic systems are being degraded, maintained or restored, based on disturbance and determine the direction and rate of changes in riparian and aquatic habitat over time? (Figure 1)   (CITE PIBO WEBPAGE) 
+* What is the status and trend of aquatic ecosystems based on user defined HUC, State, Forest, BLM Management unit or Tribal boundaries? 
+* Determine if aquatic systems are being degraded, maintained or restored, based on disturbance and determine the direction and rate of changes in riparian and aquatic habitat over time? (Figure 1)   (CITE PIBO WEBPAGE) 
 
 
 Figure 1) Example of analysis for the trend of aquatic metric based on management type (CITE PIBO REPORT) 
 
-The quality in-stream habitat will achieve or exceed federal, state, tribal threshold standards for water quality? (CITE BLM REPORT) 
+
+*  The quality in-stream habitat will achieve or exceed federal, state, tribal threshold standards for water quality? (CITE BLM REPORT) 
  
 Additional benefits for data users: 
-Summary analysis based on user defined spatial and temporal extent to be used in products such as Forest Plans, Annual Reports, BLM Grazing permits 
-Access to organized aquatic habitat metrics and indicators and environmental covariates across projects. Potential users Including the National Fish Habitat Monitoring Partnership and Dreissenid Mussel Risk Assessments Working Group. 
-Standard FGDC (ISO) metadata based on users’ download criteria
-Benefits for the data providers include: 
-Increase visibility and data reuse of long term, large spatial scale in-stream and upland riparian habitat monitoring data 
-Streamline data publishing and access to long term datasets, freeing up data manager’s time 
-Provide interactive summary analysis for spatial regions such as forests, BLM regions, states and tribal holdings answering basic management question, allowing project’s data analysts to focus on novel analysis 
-Benefits for National Monitoring Framework (NMF): 
-Leverage existing capacities to answer management questions for specific audiences, using resources such as BLM’s AIM database, EPA’s Water Quality Portal, USGS’ ScienceBase, StreamStats, Metadata Generator, and MonitoringResources.org. 
-Improve access to in-stream and riparian habitat data, analysis, and metadata. 
-Example of USGS leading efforts to share resources across agencies inside DOI (USGS and BLM) and outside the DOI (USFS)
-Working across Mission Areas in the USGS to expand knowledge and produce FAIR data products 
+* Summary analysis based on user defined spatial and temporal extent to be used in products such as Forest Plans, Annual Reports, BLM Grazing permits 
+* Access to organized aquatic habitat metrics and indicators and environmental covariates across projects. Potential users Including the National Fish Habitat Monitoring Partnership and Dreissenid Mussel Risk Assessments Working Group. 
+* Standard FGDC (ISO) metadata based on usersâ€™ download criteria
+* Benefits for the data providers include: 
+* Increase visibility and data reuse of long term, large spatial scale in-stream and upland riparian habitat monitoring data 
+* Streamline data publishing and access to long term datasets, freeing up data managerâ€™s time 
+* Provide interactive summary analysis for spatial regions such as forests, BLM regions, states and tribal holdings answering basic management question, allowing projectâ€™s data analysts to focus on novel analysis 
+* Benefits for National Monitoring Framework (NMF): 
+* Leverage existing capacities to answer management questions for specific audiences, using resources such as BLMâ€™s AIM database, EPAâ€™s Water Quality Portal, USGSâ€™ ScienceBase, StreamStats, Metadata Generator, and MonitoringResources.org. 
+* Improve access to in-stream and riparian habitat data, analysis, and metadata. 
+* Example of USGS leading efforts to share resources across agencies inside DOI (USGS and BLM) and outside the DOI (USFS)
+* Working across Mission Areas in the USGS to expand knowledge and produce FAIR data products 
+
 
 Inputs
 To scale this project to 120 day detail I recommend focusing on data that is already available via APIs, the BLM AIM Aquatic Habitat Data and the EPA National Rivers and Streams Data and focusing on metrics and indicators that are compatible based on expert opinion and the  AIM National Aquatic Monitoring Framework Technical Reference 1735-2 Appendix A: Protocol Compatibility (INSERT REFERENCE) 
 
 BLM AIM Aquatic Habitat Data- BLM Aquatic AIM provides in-stream and riparian habitat metrics, indicators and progrect metadata. 
 Aquatic AIM Lead, Scott Miller, swmiller@blm.gov
-Spatial Extent- BLM lands across the western United States from the Dakota’s West and includes Alaska. 
+Spatial Extent- BLM lands across the western United States from the Dakotaâ€™s West and includes Alaska. 
 Temporal Extent: ?-2019
 Data- https://landscape.blm.gov/geoportal/catalog/AIM/AIM.page
 Metadata- https://aim.landscapetoolbox.org/introduction-to-aim/
