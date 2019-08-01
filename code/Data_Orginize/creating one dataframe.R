@@ -6,7 +6,7 @@ library(dplyr)
 
 
 metadata<-as_tibble(read.xlsx2("Data/Metadata.xlsx", 2, header=TRUE))
-SN <-select(metadata, c(ShortName,AREMPColumn., BLMColumn, EPAColumn, PIBOColumn))
+SN <-select(metadata, c(ShortName,AREMPColumn, BLMColumn, EPAColumn, PIBOColumn))
 SN <- as_tibble(lapply(SN, as.character))
 
 #Covnert blankes to missing values 
