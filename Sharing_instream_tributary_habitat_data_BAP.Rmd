@@ -1,0 +1,186 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+
+```{r}
+
+#install.packages("leaflet")
+#install.packages("sp")
+#install.packages("sf")
+#install.packages("tidyverse")
+#install.packages("rgdal")
+install.packages("formattable")
+
+library(openxlsx)
+library(downloader) 
+library(leaflet)
+library(sp)
+library(sf)
+library(tidyverse)
+library(rgdal)
+library(rstudioapi)
+library(RCurl)
+library(ggplot2)
+library(formattable)
+
+```
+Background information check 
+```{r}
+rm (list = objects ()); ls ()
+my.d <- rstudioapi::getActiveDocumentContext()
+print(my.d)
+my.dir <- dirname(my.file.location)
+print(my.dir)
+```
+
+<h1>Background </h1>
+
+To accelerate research and decision making data needs to be findable, accessible, interoperable, and reusable (FAIR). Multiple federal, state and tribal agencies collect in-stream and riparian habitat metrics to answer management questions specific to their program goals. This anaysis package intergrates data from two different aquatic monitoring programs; BLM AIM and EPA Rivers and Streams (Table1) . Ultemently we would like to intergrate two US Forest Service instream aquatic habitat monitoring programs, but their data is not publicially accessable. 
+
+<h2>Monitoirng Program Information</h2> 
+
+```{r}
+library(knitr)
+library(gridExtra)
+install.packages("kableExtra")
+library(kableExtra)
+
+```
+
+```{r}
+
+program_info<-(read.xlsx("Data/Metadata.xlsx", 1))
+
+
+kable(program_info) %>%
+    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=T ))
+
+```
+
+<h3> Program Metrics </h3> 
+Each monitoring program calculates a standard set of metrics, we compiled a data dictionary indtifing where programs calculate the same metrics. We classified each metirc into a catagory, table 2 shows the count of metrics by catagory. 
+
+```{r}
+metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 2))
+
+metadata %>%
+  group_by(Category)%>%
+  count(Category)
+
+#kable(metadata) %>%
+ #   kable_styling(bootstrap_options = c("striped", "hover", fixed_header=T ))
+
+```
+
+Using the dictionary we indtify the metrics calculated by 4 or more programs. 
+```{r}
+source("Code/data_orginize/create_list_of_metrics.R")
+metrics()
+```
+
+<h1>Data Sources</h1> 
+<h2>Metric Data</h2>
+Two of the four habitat programs store metric level data online. We pull that data from the sourcs to be used to create a singular data set for mapping and analysis. 
+
+<h3> BLM AIM Data </h3>
+The BLM AIM collects data across BLM lands. BLM data is stored as a geodatabase at !!!!!!!. 
+
+
+```{r}
+
+#URL Location of the AIM GeoDataBase if the location changes this will need to be updated 
+fileURL<- "https://gis.blm.gov/AIMDownload/LayerPackages/BLM_AIM_AquADat.zip"
+
+#Download the file to the Data file
+download(fileURL, "Data/BLM.zip" )
+
+#Unzip the file into the Data File 
+unzip("Data/BLM.zip", exdir="Data")
+
+#Define the file path to the geodata base, if the BLM changes their file structure this will need to be updated 
+fgdb=path.expand('Data/BLM_AIM_AquADat/v104/AquADat_data.gdb')
+
+#Read the Geodatabase layer into a file 
+BLM <- data.frame(readOGR(dsn=fgdb))
+
+#write the datafile to the datafile in the repository
+write.csv(BLM,"Data/BLM.csv")
+
+head(BLM)
+```
+<h3>EMA Rivers and Streams Data </h3>
+EPA collects data across the Unites States and publised their metric level data here!!!!!!! 
+
+```{r}
+#Pull the data set for NRSA 0809 Physical Habitat Larger Set of Metrics - Data (CSV)(1 pg, 4 MB) from WEBPAGE 
+ld_download <- getURL("https://www.epa.gov/sites/production/files/2015-09/phabmed.csv")
+large_data  <- tbl_df(read.csv (text=ld_download))
+
+#Load the list of metric names create from the metadata 
+subSN<- read.csv("Data/SubSetOfMetricNames.csv") 
+
+#A vector of metric names from the EPA data 
+EPA<-subSN$EPAColumn
+EPA<-as.character(EPA[!is.na(EPA)])
+
+# Include the protocol variable because the dataset contains both Wadeable and Boat streams, we are only intrested in wadeable streams 
+EPA<- c(EPA, "PROTOCOL")
+
+#Create a subset of the EPA data sets with only the metrics that overlap between the programs 
+sub= large_data[c(EPA)]
+
+#Remove all botable data, creating a subset of data that only contains the wadable stream data protocol 
+EPA_Wadeable= filter(sub, sub$PROTOCOL=="WADEABLE")
+#Save the dataset in the repository data file 
+write.csv(EPA_Wadeable, file="Data/EPA_Subset.csv", row.names=FALSE)
+
+head(EPA_Wadeable)
+```
+
+
+<h1>One Data Frame</h1>
+For mapping and analysis we build one dataframe with all data sourcs. 
+
+```{r}
+
+source("Code/data_orginize/creating one dataframe_for loop.R")
+one_data_frame()
+data<- read.csv("Data/All_Data.csv") 
+
+
+```
+
+<h1>Map</h1>
+Identify where data is collected for each program. (ideally we would create an inateractive map allowing the user to define the area they are intrested in data for)
+
+```{r}
+map_dir = paste0(getwd(),"/Map")
+htmlMap<- file.path(map_dir, "map.html")
+viewer(htmlMap)
+
+
+```
+
+<h1>Data Collection and Anaysis Methods</h1>
+Based on proffessional opinion we identify in the data dictionary which metrics are similary, but inorder to understand how the data is collected and anaysised we need to see read the methodology. (PULL THE METHODOLOGY FROM MR.org )
+```{r}
+
+```
+
+
+simplevisulizations 
+
+```{r}
+data<- read.csv("Data/All_Data.csv")
+ggplot(data, aes(x=LWD_Freq, y=Grad))+ geom_point()+facet_wrap(~Program)
+```
+
+```{r}
+
+```
+

@@ -27,7 +27,7 @@ df %>%
 
 
 ggplot(data, aes(x=RchLen, y=Grad))+ geom_point()+facet_wrap(~Program)
-ggplot(data, aes(x=program, y=LWFreq))+geom_boxplot()
+ggplot(data, aes(x=Program, y=LWFreq))+geom_boxplot()
 
 
 ggplot(data, aes(x=BRLat, y=BRLong))+ geom_point()+facet_wrap(~Program)

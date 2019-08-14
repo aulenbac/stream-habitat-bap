@@ -4,7 +4,7 @@ install.packages('tidyverse')
 library(tidyverse)
 library(openxlsx)
 
-
+metrics<- function() {
     #Pull in the metadata file 
     metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 2))
     SN <-select(metadata, c(ShortName,AREMPColumn, BLMColumn, EPAColumn, PIBOColumn))
@@ -20,5 +20,10 @@ library(openxlsx)
     
     #save the list of variables 
     write.csv(subSN, file="Data/SubSetOfMetricNames.csv", row.names=FALSE)
+  
+    print(subSN)
+    
+    
+} 
 
     
