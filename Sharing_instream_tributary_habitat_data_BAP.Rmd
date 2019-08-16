@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "BAP"
 output: html_notebook
 ---
 
@@ -14,7 +14,8 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 #install.packages("sf")
 #install.packages("tidyverse")
 #install.packages("rgdal")
-install.packages("formattable")
+#install.packages("formattable")
+#install.packages("kableExtra")
 
 library(openxlsx)
 library(downloader) 
@@ -27,6 +28,12 @@ library(rstudioapi)
 library(RCurl)
 library(ggplot2)
 library(formattable)
+library(htmltools)
+
+#Packages to create well formated tables in RStuido 
+library(knitr)
+library(gridExtra)
+library(kableExtra)
 
 ```
 Background information check 
@@ -44,43 +51,32 @@ To accelerate research and decision making data needs to be findable, accessible
 
 <h2>Monitoirng Program Information</h2> 
 
-```{r}
-library(knitr)
-library(gridExtra)
-install.packages("kableExtra")
-library(kableExtra)
-
-```
 
 ```{r}
-
 program_info<-(read.xlsx("Data/Metadata.xlsx", 1))
-
 
 kable(program_info) %>%
     kable_styling(bootstrap_options = c("striped", "hover", fixed_header=T ))
-
 ```
 
 <h3> Program Metrics </h3> 
-Each monitoring program calculates a standard set of metrics, we compiled a data dictionary indtifing where programs calculate the same metrics. We classified each metirc into a catagory, table 2 shows the count of metrics by catagory. 
+Each monitoring program calculates a standard set of metrics based to  we compiled a data dictionary indtifing where programs calculate the same metrics. We classified each metirc into a catagory, table 2 shows the count of metrics by catagory. 
 
 ```{r}
+
+#Read in the data dictionary 
 metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 2))
 
 metadata %>%
   group_by(Category)%>%
   count(Category)
-
-#kable(metadata) %>%
- #   kable_styling(bootstrap_options = c("striped", "hover", fixed_header=T ))
-
 ```
 
 Using the dictionary we indtify the metrics calculated by 4 or more programs. 
 ```{r}
 source("Code/data_orginize/create_list_of_metrics.R")
-metrics()
+metrics_list=metrics()
+
 ```
 
 <h1>Data Sources</h1> 
@@ -117,29 +113,11 @@ head(BLM)
 EPA collects data across the Unites States and publised their metric level data here!!!!!!! 
 
 ```{r}
-#Pull the data set for NRSA 0809 Physical Habitat Larger Set of Metrics - Data (CSV)(1 pg, 4 MB) from WEBPAGE 
-ld_download <- getURL("https://www.epa.gov/sites/production/files/2015-09/phabmed.csv")
-large_data  <- tbl_df(read.csv (text=ld_download))
+source("Code/data_orginize/Pull EPA Data.R")
+#Fuction to pull EPA data from the user assigned webpage, clean, save and orginize the wadable stream data
+#This does now work when connect to the vpn (I HAVE NO IDEA WHY?)
+Pull_EPA("https://www.epa.gov/sites/production/files/2015-09/phabmed.csv") 
 
-#Load the list of metric names create from the metadata 
-subSN<- read.csv("Data/SubSetOfMetricNames.csv") 
-
-#A vector of metric names from the EPA data 
-EPA<-subSN$EPAColumn
-EPA<-as.character(EPA[!is.na(EPA)])
-
-# Include the protocol variable because the dataset contains both Wadeable and Boat streams, we are only intrested in wadeable streams 
-EPA<- c(EPA, "PROTOCOL")
-
-#Create a subset of the EPA data sets with only the metrics that overlap between the programs 
-sub= large_data[c(EPA)]
-
-#Remove all botable data, creating a subset of data that only contains the wadable stream data protocol 
-EPA_Wadeable= filter(sub, sub$PROTOCOL=="WADEABLE")
-#Save the dataset in the repository data file 
-write.csv(EPA_Wadeable, file="Data/EPA_Subset.csv", row.names=FALSE)
-
-head(EPA_Wadeable)
 ```
 
 
@@ -147,12 +125,9 @@ head(EPA_Wadeable)
 For mapping and analysis we build one dataframe with all data sourcs. 
 
 ```{r}
-
 source("Code/data_orginize/creating one dataframe_for loop.R")
 one_data_frame()
 data<- read.csv("Data/All_Data.csv") 
-
-
 ```
 
 <h1>Map</h1>
@@ -161,26 +136,93 @@ Identify where data is collected for each program. (ideally we would create an i
 ```{r}
 map_dir = paste0(getwd(),"/Map")
 htmlMap<- file.path(map_dir, "map.html")
-viewer(htmlMap)
-
-
+viewer(htmlMap) 
 ```
+
 
 <h1>Data Collection and Anaysis Methods</h1>
 Based on proffessional opinion we identify in the data dictionary which metrics are similary, but inorder to understand how the data is collected and anaysised we need to see read the methodology. (PULL THE METHODOLOGY FROM MR.org )
 ```{r}
 
+library(jsonlite)
+
+# Pull Method data from MR.org based on the metric we are intrested in. 
+#I DON'T KNOW HOW TO make the HTML look correct 
+
+
+id=922
+mr_method= paste0("https://www.monitoringresources.org/api/v1/methods/", id) 
+mr_method=URLencode(mr_method)
+method_text=fromJSON(mr_method) 
+kable(method_text$instructions)
+
+
 ```
 
+<h1> Environmental Covariates</h1>
 
-simplevisulizations 
+
+
+<h1>Simple Visulizations </h2>
+
+
 
 ```{r}
-data<- read.csv("Data/All_Data.csv")
-ggplot(data, aes(x=LWD_Freq, y=Grad))+ geom_point()+facet_wrap(~Program)
+data %>%
+  group_by(Program) %>%
+  summarize(mean(PctPool, na.rm=T)) 
+
+```
+```{r}
+ggplot(data, aes(x=Grad, y=PctPool))+ geom_point()+facet_wrap(~Program)
+
+
+```
+```{r}
+data %>%
+  group_by(Program) %>%
+  summarize(mean(PctPool, na.rm=T))
+```
+```{r}
+ggplot(data, aes(PctPool))+geom_histogram()+facet_wrap(~Program)
 ```
 
 ```{r}
+library(shiny)
 
+h = ggplot(data, aes(PctPool))+geom_histogram()
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+  # App title ----
+  titlePanel("Hello Shiny!"),
+
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+
+      # Input: Slider for the number of bins ----
+      sliderInput(inputId = "bins",
+                  label = "Number of bins:",
+                  min = min(data$PctPool, na.rm=T),
+                  max = max(data$PctPool, na.rm=T),
+                  value = 10)
+
+    ),
+
+    # Main panel for displaying outputs ----
+    mainPanel(
+
+      # Output: Histogram ----
+      plotOutput(outputId = "h")
+
+    )
+  )
+)
+
+ui
 ```
 

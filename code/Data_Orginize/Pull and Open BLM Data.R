@@ -20,3 +20,4 @@ BLM <- data.frame(readOGR(dsn=fgdb))
 
 #write the datafile to the datafile in the repository
 write.csv(BLM,"Data/BLM.csv")
+  

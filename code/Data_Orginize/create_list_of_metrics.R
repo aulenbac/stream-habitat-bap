@@ -1,8 +1,8 @@
 #Create a subset of the metrics from the 4 programs to use in creating a dataframe and pulling data from the datasets to create one dataframe 
 
-install.packages('tidyverse')
-library(tidyverse)
-library(openxlsx)
+#install.packages('tidyverse')
+#library(tidyverse)
+#library(openxlsx)
 
 metrics<- function() {
     #Pull in the metadata file 
@@ -22,6 +22,7 @@ metrics<- function() {
     write.csv(subSN, file="Data/SubSetOfMetricNames.csv", row.names=FALSE)
   
     print(subSN)
+    return(subSN)
     
     
 } 
