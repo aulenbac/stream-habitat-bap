@@ -13,6 +13,8 @@ library(flexdashboard)
 library(openxlsx)
 library(leaflet)
 library(tidyverse)
+install.packages("DT")
+library(DT)
 ```
 
 Column {data-width=650}
@@ -40,6 +42,9 @@ m
 
 ```
 
+>Map of Data Collection Events 
+
+
 Column {data-width=350}
 -----------------------------------------------------------------------
 
@@ -47,7 +52,12 @@ Column {data-width=350}
 
 ```{r}
 
-ggplot(data, aes(x=Grad, y=PctPool))+ geom_point()+facet_wrap(~Program)
+program_info<-(read.xlsx("Data/Metadata.xlsx", 1))
+
+#kable(program_info) %>%
+#    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
+
+datatable(program_info, rownames=FALSE,  extensions = 'Buttons', options = list(dom = 'Bfrtip', buttons = c('copy', 'csv', 'excel', 'pdf', 'print')))
 
 ```
 

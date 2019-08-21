@@ -1,23 +1,23 @@
-"ShortName","AREMPColumn","BLMColumn","EPAColumn","PIBOColumn","count"
-"ReachID","site_survey_id","UID","UID","RchID",5
-"SiteID","site_id","MS_CD","SITE_ID","SiteID",5
-"Year","survey_year",NA,"YEAR","Yr",4
-"Date","survey_date","DT","DATE_COL",NA,4
-"BRLat","lattitude","BTMLAT","LAT_DD83","Lat",5
-"BRLong","longitude","BTMLONG","LON_DD83","Long",5
-"BFWidth","ave_bfwidth","BNKFLL_WT","XBKF_W","Bf",5
-"Grad","gradient","SLPE","XSLOPE","Grad",5
-"RchLen","reach_length","TOT_RCH_LEN","REACHLEN","RchLen",5
-"BF_WDRatio","ave_widthDepth_ratio",NA,"BFWD_RAT","WDTrans",4
-"BF_Height","ave_bfdepth","BNKFLL_HT","XBKF_H",NA,4
-"RPD ","ave_residual_depth","RES_PL_DEP","RP100","PoolDp",5
-"PctPool",NA,"PCT_PL","PCT_POOL","PoolPct",4
-"Sin ",NA,"SNSTY","SINU","Sin",4
-"PctDry","dry_pcnt","PCT_DRY","PCT_DRS",NA,4
-"BankAngle",NA,"BNK_AN","XBKA","BankAngle",4
-"D50","D50","D50",NA,"D50",4
-"PoolTailFines2","pcnt_pool_fines","PL_TL_FN",NA,"PTFines2",4
-"PctFines2","pcnt_fines_tran2","PCT_FN","PCT_SAFN",NA,4
-"PctFines6","pcnt_fines_tran6","PCT_FN6","PCT_FN",NA,4
-"LWD_Freq",NA,"LWD_FREQ","C1WM100","LWFrq",4
-"LWD_Vol",NA,"LWD_VL","V1WM100","LWVol",4
+"Category","Name","ShortName","AREMPColumn","BLMColumn","EPAColumn","PIBOColumn","Count.of.Program"
+"Identification","Reach ID number","ReachID","site_survey_id","UID","UID","RchID",4
+"Identification","Site ID number","SiteID","site_id","MS_CD","SITE_ID","SiteID",4
+"Identification","Sample Year ","Year","survey_year",NA,"YEAR","Yr",3
+"Identification","Sample Date ","Date","survey_date","DT","DATE_COL",NA,3
+"Location","Latitude","BRLat","lattitude","BTMLAT","LAT_DD83","Lat",4
+"Location","Longitude","BRLong","longitude","BTMLONG","LON_DD83","Long",4
+"Channel dimensions","Average bankfull width from transects","BFWidth","ave_bfwidth","BNKFLL_WT","XBKF_W","Bf",4
+"Channel dimensions","Gradient of stream reach","Grad","gradient","SLPE","XSLOPE","Grad",4
+"Channel dimensions","Length of sampling reach","RchLen","reach_length","TOT_RCH_LEN","REACHLEN","RchLen",4
+"Channel dimensions","Bankfull width-to-depth ratio at transects","BF_WDRatio","ave_widthDepth_ratio",NA,"BFWD_RAT","WDTrans",3
+"Channel dimensions","Bankfull Height","BF_Height","ave_bfdepth","BNKFLL_HT","XBKF_H",NA,3
+"Pools ","Residual pool depth","RPD ","ave_residual_depth","RES_PL_DEP","RP100","PoolDp",4
+"Pools ","Percent pools","PctPool",NA,"PCT_PL","PCT_POOL","PoolPct",3
+"Channel Characteristics","Sinuosity of Local Stream Reach","Sin ",NA,"SNSTY","SINU","Sin",3
+"Channel Characteristics","Percent of Reach that is Dry ","PctDry","dry_pcnt","PCT_DRY","PCT_DRS",NA,3
+"Streambanks","Bank angle","BankAngle",NA,"BNK_AN","XBKA","BankAngle",3
+"Substrate","Diameter of the 50th percentile streambed particle","D50","D50","D50",NA,"D50",3
+"Substrate","Percent pool tail fines < 2mm","PoolTailFines2","pcnt_pool_fines","PL_TL_FN",NA,"PTFines2",3
+"Substrate","Percent of streambed particles <2mm","PctFines2","pcnt_fines_tran2","PCT_FN","PCT_SAFN",NA,3
+"Substrate","Percent of streambed particles <6mm","PctFines6","pcnt_fines_tran6","PCT_FN6","PCT_FN",NA,3
+"Wood","Large wood frequency","LWD_Freq",NA,"LWD_FREQ","C1WM100","LWFrq",3
+"Wood","Large wood volume","LWD_Vol",NA,"LWD_VL","V1WM100","LWVol",3

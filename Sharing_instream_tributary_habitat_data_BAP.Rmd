@@ -1,13 +1,16 @@
 ---
 title: "BAP"
-output: html_notebook
+output:
+  word_document: default
+  pdf_document: default
+  html_notebook: default
 ---
 
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
 
-```{r}
+```{r global, include=FALSE}
 
 #install.packages("leaflet")
 #install.packages("sp")
@@ -16,6 +19,7 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 #install.packages("rgdal")
 #install.packages("formattable")
 #install.packages("kableExtra")
+install.packages("DT")
 
 library(openxlsx)
 library(downloader) 
@@ -32,6 +36,7 @@ library(htmltools)
 
 #Packages to create well formated tables in RStuido 
 library(knitr)
+library(DT)
 library(gridExtra)
 library(kableExtra)
 
@@ -39,29 +44,31 @@ library(kableExtra)
 
 <h1>Background </h1>
 
-To accelerate research and decision making data needs to be findable, accessible, interoperable, and reusable (FAIR). Multiple federal, state and tribal agencies collect in-stream and riparian habitat metrics to answer management questions specific to their program goals. This anaysis package intergrates data from two different aquatic monitoring programs; BLM AIM and EPA Rivers and Streams (Table1) . Ultemently we would like to intergrate two US Forest Service instream aquatic habitat monitoring programs, but their data is not publicially accessable. 
+To accelerate research and decision making data needs to be findable, accessible, interoperable, and reusable (FAIR). Multiple federal, state and tribal agencies collect in-stream and riparian habitat metrics to answer management questions specific to their program goals. This analysis package integrates data from two different aquatic monitoring programs; BLM AIM and EPA Rivers and Streams (Table1) . We would like to integrate two US Forest Service in-stream aquatic habitat monitoring programs, but their data is not publicity accessible. 
 
-<h2>Monitoirng Program Information</h2> 
+<h2>Monitoring Program Information</h2> 
 
 
 ```{r}
 program_info<-(read.xlsx("Data/Metadata.xlsx", 1))
 
-kable(program_info) %>%
-    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=T ))
+#kable(program_info) %>%
+#    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
+
+datatable(program_info)
 ```
 
 <h3> Program Metrics </h3> 
-Each monitoring program calculates a standard set of metrics based to  we compiled a data dictionary indtifing where programs calculate the same metrics. We classified each metirc into a catagory, table 2 shows the count of metrics by catagory. 
+Each monitoring program calculates a standard set of metrics based on their user's needs. Metadata for the EPA and BLM can be found on their webpages, PIBO and AREMP is aviable apon request. To facilitate data sharing we compiled a data dictionary identifing the metrics calculate by more then one program. You can find the full metric table in !!!! (NEED TO REVIEW AND PUBLISH) We classified each metirc into a catagory, table 2 shows the count of metrics by catagory. 
 
 ```{r}
 
 #Read in the data dictionary 
 metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 2))
 
-metadata %>%
+kable(metadata %>%
   group_by(Category)%>%
-  count(Category)
+  count(Category, sort=TRUE))
 
 
 ```
@@ -70,7 +77,8 @@ Each program calculates a produce a standard set of metrics. The EPA, BLM data a
 ```{r}
 source("Code/data_organize/create_list_of_metrics.R")
 metrics_list=metrics()
-
+kable(metrics_list)%>%
+    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
 ```
 
 <h1>Data Sources</h1> 
@@ -107,10 +115,10 @@ head(BLM)
 EPA collects data across the Unites States and publised their metric level data here!!!!!!! 
 
 ```{r}
-source("Code/data_organize/Pull EPA Data.R")
+#source("Code/data_organize/Pull EPA Data.R")
 #Fuction to pull EPA data from the user assigned webpage, clean, save and organize the wadable stream data
 #This does now work when connect to the vpn (I HAVE NO IDEA WHY?)
-Pull_EPA("https://www.epa.gov/sites/production/files/2015-09/phabmed.csv") 
+#Pull_EPA("https://www.epa.gov/sites/production/files/2015-09/phabmed.csv") 
 
 ```
 
@@ -133,7 +141,6 @@ htmlMap<- file.path(map_dir, "map.html")
 viewer(htmlMap) 
 ```
 
-
 <h1>Data Collection and Anaysis Methods</h1>
 Based on proffessional opinion we identify in the data dictionary which metrics are similary, but inorder to understand how the data is collected and anaysised we need to see read the methodology. (PULL THE METHODOLOGY FROM MR.org )
 ```{r}
@@ -142,7 +149,7 @@ metric = "PctPool"
 # Pull Method data from MR.org based on the metric we are intrested in. 
 #I DON'T KNOW HOW TO make the HTML look correct 
 source("Code/data_organize/metric_documentation.R")
-PctPoolMetadata <- metric_information(metric)
+PctPoolMetadata <- metric_information("")
 print(PctPoolMetadata)
 ```
 
@@ -150,7 +157,7 @@ print(PctPoolMetadata)
 
 
 
-<h1>Simple Visulizations </h2>
+<h1>Simple Visualizations </h2>
 
 
 
@@ -174,42 +181,41 @@ ggplot(data, aes(PctPool))+geom_histogram()+facet_wrap(~Program)
 ```
 
 ```{r}
-library(shiny)
+#library(shiny)
 
-h = ggplot(data, aes(PctPool))+geom_histogram()
+#h = ggplot(data, aes(PctPool))+geom_histogram()
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
+#ui <- fluidPage(
 
   # App title ----
-  titlePanel("Pools"),
+  #titlePanel("Pools"),
 
   # Sidebar layout with input and output definitions ----
-  sidebarLayout(
+  #sidebarLayout(
 
     # Sidebar panel for inputs ----
-    sidebarPanel(
+   # sidebarPanel(
 
       # Input: Slider for the number of bins ----
-      sliderInput(inputId = "bins",
-                  label = "Number of bins:",
-                  min = min(data$PctPool, na.rm=T),
-                  max = max(data$PctPool, na.rm=T),
-                  value = 10)
+    #  sliderInput(inputId = "bins",
+     #             label = "Number of bins:",
+      #            min = min(data$PctPool, na.rm=T),
+       #           max = max(data$PctPool, na.rm=T),
+        #          value = 10)
 
-    ),
+    #),
 
     # Main panel for displaying outputs ----
-    mainPanel(
+#    mainPanel(
 
       # Output: Histogram ----
-      plotOutput(outputId = "h")
+ #     plotOutput(outputId = "h")
+#
+ # )
+#)
 
-    )
-  )
-)
-
-ui
+#ui
 ```
 ```{r}
 

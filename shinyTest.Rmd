@@ -1,5 +1,5 @@
 ---
-title: "flexdashboard: Shiny Embedding"
+title: "FAIR Instream Tributary Habitat Metrics"
 output: 
   flexdashboard::flex_dashboard:
     social: menu
@@ -13,33 +13,22 @@ library(shiny)
 library(datasets)
 library(ggplot2)
 data<- read.csv("Data/All_Data.csv") 
+
 ```
 
-
+Column {data-width=200 .sidebar}
+---------------------------------------------------------------------------------
 ```{r, include=FALSE}
-# UI function
-UI <- fluidPage(selectInput("Metrics", "Metric:", names(data)))
+n= names(data)
 
+selectInput("Metric", "Metrics", n[7:length(n)-1] )
 
-# Server function
-server= fucntion(input, output){
-  output$newPlot <- renderPlot({select_quo <- quo(input$newplot_select)
-    data %>%
-      mutate(user_input = !!select_quo) %>%
-      ggplot(aes(fill=user_input,  y=user_input, x=`Developer group`)) + 
-      geom_bar( stat="identity")
-
- })
-  
-      output$<- ggplot(data, aes(x=Grad, y=PctPool))+ geom_point()+facet_wrap(~Program)
-    }
 
 ```
-
+Column {data-width=800}
+------------------------------------------------------------------------------------
 ```{r}
-# Include the module
-UI("phones")
-callModule(worldPhones, "phones")
+ggplot(data, aes(x=Grad, y=input)+ geom_point()+facet_wrap(~Program))
 
 ```
 
@@ -47,16 +36,16 @@ callModule(worldPhones, "phones")
 
 ```{r}
 
-shinyApp(
-  ui = fillPage(fillCol(flex = c(NA, 1), inputPanel(selectInput("Metric", "Metric:", choices = colnames(data))),
-      plotOutput("Metirc", height = "100%"))
-  ),
-  server = function(input, output) {
-  output$Plot <- ggplot(data, aes(x=Grad, y=input)+ geom_point()+facet_wrap(~Program))
-    })
-  },
-  options = list(height = 600)
-)
+#shinyApp(
+#  ui = fillPage(fillCol(flex = c(NA, 1), inputPanel(selectInput("Metric", "Metric:", choices = colnames(data))),
+#      plotOutput("Metirc", height = "100%"))
+#  ),
+#  server = function(input, output) {
+#  output$Plot <- ggplot(data, aes(x=Grad, y=input)+ geom_point()+facet_wrap(~Program))
+ #   })
+#  },
+#  options = list(height = 600)
+#)
 
 ```
 
