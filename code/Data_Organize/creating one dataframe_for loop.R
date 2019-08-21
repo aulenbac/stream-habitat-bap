@@ -36,7 +36,7 @@ one_data_frame <- function() {
             }
           
           #create a column name to reference 
-          column <- paste(program[i],"Column", sep='')
+          column <- paste0(program[i],"Column")
           c<-((names(subSN)==column)==TRUE)
           
           # Create a subset of metrics  
