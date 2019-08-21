@@ -1,0 +1,62 @@
+---
+title: "flexdashboard: Shiny Embedding"
+output: 
+  flexdashboard::flex_dashboard:
+    social: menu
+    source_code: embed 
+runtime: shiny
+---
+
+```{r global, include=FALSE}
+library(flexdashboard)
+library(shiny)
+library(datasets)
+library(ggplot2)
+data<- read.csv("Data/All_Data.csv") 
+```
+
+
+```{r, include=FALSE}
+# UI function
+UI <- fluidPage(selectInput("Metrics", "Metric:", names(data)))
+
+
+# Server function
+server= fucntion(input, output){
+  output$newPlot <- renderPlot({select_quo <- quo(input$newplot_select)
+    data %>%
+      mutate(user_input = !!select_quo) %>%
+      ggplot(aes(fill=user_input,  y=user_input, x=`Developer group`)) + 
+      geom_bar( stat="identity")
+
+ })
+  
+      output$<- ggplot(data, aes(x=Grad, y=PctPool))+ geom_point()+facet_wrap(~Program)
+    }
+
+```
+
+```{r}
+# Include the module
+UI("phones")
+callModule(worldPhones, "phones")
+
+```
+
+
+
+```{r}
+
+shinyApp(
+  ui = fillPage(fillCol(flex = c(NA, 1), inputPanel(selectInput("Metric", "Metric:", choices = colnames(data))),
+      plotOutput("Metirc", height = "100%"))
+  ),
+  server = function(input, output) {
+  output$Plot <- ggplot(data, aes(x=Grad, y=input)+ geom_point()+facet_wrap(~Program))
+    })
+  },
+  options = list(height = 600)
+)
+
+```
+

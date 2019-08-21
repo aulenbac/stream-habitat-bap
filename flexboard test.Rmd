@@ -1,0 +1,59 @@
+---
+title: "Test"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: journal
+    socal: menu 
+    source_code: embeded
+   
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(openxlsx)
+library(leaflet)
+library(tidyverse)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+data<- read.csv("Data/All_Data.csv") 
+  
+  pal <- colorFactor(rainbow(3), data$Program)
+  data <-data %>% drop_na(BRLong) %>% drop_na(BRLat)
+  m <-data %>% 
+      leaflet() %>%
+      addTiles() %>%
+      addCircles(lng=~BRLong, lat= ~BRLat, color=~pal(Program), 
+                            popup= ~paste0("<b>",  Program, "</b>", 
+                             "<br>", "<b>", "ReachID ", "</b>",  ReachID, "</br>",
+                             "<br>", "<b>", "SiteID ", "</b>",SiteID,  "</br>",
+                             "<br>", "<b>", "Year ", "</b>", Year,    "</br>",
+                             "<br>", "<b>", "Date ", "</b>", Date,    "</br>")) %>%
+                              addLegend("topright", pal=pal, values= ~Program, opacity =1)
+  
+m
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+
+ggplot(data, aes(x=Grad, y=PctPool))+ geom_point()+facet_wrap(~Program)
+
+```
+
+### Chart C
+
+```{r}
+ggplot(data, aes(PctPool))+geom_histogram()+facet_wrap(~Program)
+```
+

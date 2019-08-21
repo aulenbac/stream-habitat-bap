@@ -11,7 +11,7 @@
 "BF_WDRatio","ave_widthDepth_ratio",NA,"BFWD_RAT","WDTrans",4
 "BF_Height","ave_bfdepth","BNKFLL_HT","XBKF_H",NA,4
 "RPD ","ave_residual_depth","RES_PL_DEP","RP100","PoolDp",5
-"PetPool",NA,"PCT_PL","PCT_POOL","PoolPct",4
+"PctPool",NA,"PCT_PL","PCT_POOL","PoolPct",4
 "Sin ",NA,"SNSTY","SINU","Sin",4
 "PctDry","dry_pcnt","PCT_DRY","PCT_DRS",NA,4
 "BankAngle",NA,"BNK_AN","XBKA","BankAngle",4

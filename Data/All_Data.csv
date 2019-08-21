@@ -1,4 +1,4 @@
-"ReachID","SiteID","Year","Date","BRLat","BRLong","BFWidth","Grad","RchLen","BF_WDRatio","BF_Height","RPD ","PetPool","Sin ","PctDry","BankAngle","D50","PoolTailFines2","PctFines2","PctFines6","LWD_Freq","LWD_Vol","Program"
+"ReachID","SiteID","Year","Date","BRLat","BRLong","BFWidth","Grad","RchLen","BF_WDRatio","BF_Height","RPD ","PctPool","Sin ","PctDry","BankAngle","D50","PoolTailFines2","PctFines2","PctFines6","LWD_Freq","LWD_Vol","Program"
 "6478","3226",2012,NA,42.0768027778,-113.677480556,4.7,1.702,171,28.76,NA,0.11,8.65,31.667,NA,145,0.002,89.5,NA,NA,11.7,0.588,"PIBO"
 "6356","3110",2011,NA,45.4911199213,-118.170850345,1.77,11.712,149.5,11.81,NA,0.2,7.49,8.794,NA,111,0.014,12.86,NA,NA,541.81,227.465,"PIBO"
 "5233","2840",2009,NA,44.535637,-112.486021,2.48,0.675,162.9,7.5,NA,0.33,62.31,5.656,NA,113,0.011,13,NA,NA,0,0,"PIBO"

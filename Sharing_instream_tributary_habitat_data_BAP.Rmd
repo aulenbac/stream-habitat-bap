@@ -36,14 +36,6 @@ library(gridExtra)
 library(kableExtra)
 
 ```
-Background information check 
-```{r}
-rm (list = objects ()); ls ()
-my.d <- rstudioapi::getActiveDocumentContext()
-print(my.d)
-my.dir <- dirname(my.file.location)
-print(my.dir)
-```
 
 <h1>Background </h1>
 
@@ -70,11 +62,13 @@ metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 2))
 metadata %>%
   group_by(Category)%>%
   count(Category)
+
+
 ```
 
-Using the dictionary we indtify the metrics calculated by 4 or more programs. 
+Each program calculates a produce a standard set of metrics. The EPA, BLM data and metadata is publicaly av
 ```{r}
-source("Code/data_orginize/create_list_of_metrics.R")
+source("Code/data_organize/create_list_of_metrics.R")
 metrics_list=metrics()
 
 ```
@@ -113,8 +107,8 @@ head(BLM)
 EPA collects data across the Unites States and publised their metric level data here!!!!!!! 
 
 ```{r}
-source("Code/data_orginize/Pull EPA Data.R")
-#Fuction to pull EPA data from the user assigned webpage, clean, save and orginize the wadable stream data
+source("Code/data_organize/Pull EPA Data.R")
+#Fuction to pull EPA data from the user assigned webpage, clean, save and organize the wadable stream data
 #This does now work when connect to the vpn (I HAVE NO IDEA WHY?)
 Pull_EPA("https://www.epa.gov/sites/production/files/2015-09/phabmed.csv") 
 
@@ -125,7 +119,7 @@ Pull_EPA("https://www.epa.gov/sites/production/files/2015-09/phabmed.csv")
 For mapping and analysis we build one dataframe with all data sourcs. 
 
 ```{r}
-source("Code/data_orginize/creating one dataframe_for loop.R")
+source("Code/data_organize/creating one dataframe_for loop.R")
 one_data_frame()
 data<- read.csv("Data/All_Data.csv") 
 ```
@@ -143,20 +137,13 @@ viewer(htmlMap)
 <h1>Data Collection and Anaysis Methods</h1>
 Based on proffessional opinion we identify in the data dictionary which metrics are similary, but inorder to understand how the data is collected and anaysised we need to see read the methodology. (PULL THE METHODOLOGY FROM MR.org )
 ```{r}
-
-library(jsonlite)
+metric = "PctPool"
 
 # Pull Method data from MR.org based on the metric we are intrested in. 
 #I DON'T KNOW HOW TO make the HTML look correct 
-
-
-id=922
-mr_method= paste0("https://www.monitoringresources.org/api/v1/methods/", id) 
-mr_method=URLencode(mr_method)
-method_text=fromJSON(mr_method) 
-kable(method_text$instructions)
-
-
+source("Code/data_organize/metric_documentation.R")
+PctPoolMetadata <- metric_information(metric)
+print(PctPoolMetadata)
 ```
 
 <h1> Environmental Covariates</h1>
@@ -175,7 +162,6 @@ data %>%
 ```
 ```{r}
 ggplot(data, aes(x=Grad, y=PctPool))+ geom_point()+facet_wrap(~Program)
-
 
 ```
 ```{r}
@@ -196,7 +182,7 @@ h = ggplot(data, aes(PctPool))+geom_histogram()
 ui <- fluidPage(
 
   # App title ----
-  titlePanel("Hello Shiny!"),
+  titlePanel("Pools"),
 
   # Sidebar layout with input and output definitions ----
   sidebarLayout(
@@ -224,5 +210,8 @@ ui <- fluidPage(
 )
 
 ui
+```
+```{r}
+
 ```
 
