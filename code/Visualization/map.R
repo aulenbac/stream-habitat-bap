@@ -7,13 +7,13 @@
 #library(sp)
 #library(sf)
 #library(tidyverse)
-#library(rgdal)
+library(rgdal)
 library(htmlwidgets)
 
 
 data<- read.csv("Data/All_Data.csv") 
   
-map_DCE<- function(){
+#map_DCE<- function(){
   pal <- colorFactor(rainbow(3), data$Program)
   data <-data %>% drop_na(BRLong) %>% drop_na(BRLat)
   m <-data %>% 
@@ -28,9 +28,10 @@ map_DCE<- function(){
                               addLegend("topright", pal=pal, values= ~Program, opacity =1)
   
 return(m)
-} 
+#} 
 
 map_filename = paste0(getwd(),"Map/map.html")
 
 saveWidget(widget=m, file=paste0(getwd(),"/Map/map.html"), selfcontained=T) 
+
 

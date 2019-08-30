@@ -52,10 +52,9 @@ To accelerate research and decision making data needs to be findable, accessible
 ```{r}
 program_info<-(read.xlsx("Data/Metadata.xlsx", 1))
 
-#kable(program_info) %>%
-#    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
+kable(program_info) %>%
+    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
 
-datatable(program_info)
 ```
 
 <h3> Program Metrics </h3> 
