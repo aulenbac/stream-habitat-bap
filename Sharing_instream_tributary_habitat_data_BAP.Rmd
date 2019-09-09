@@ -148,8 +148,12 @@ metric = "PctPool"
 # Pull Method data from MR.org based on the metric we are intrested in. 
 #I DON'T KNOW HOW TO make the HTML look correct 
 source("Code/data_organize/metric_documentation.R")
-PctPoolMetadata <- metric_information("")
+PctPoolMetadata <- metric_information("PctPool")
 print(PctPoolMetadata)
+
+kable(PctPoolMetadata)%>%
+    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
+
 ```
 
 <h1> Environmental Covariates</h1>

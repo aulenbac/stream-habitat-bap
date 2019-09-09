@@ -2,6 +2,7 @@
 library(jsonlite)
 library(openxlsx)
 
+metric_name="PctPool"
 metric_information <-function(metric_name) {
   metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 2)) # pull the metadata 
   metric_index<- filter(metadata, ShortName==metric_name)
@@ -23,7 +24,8 @@ metric_information <-function(metric_name) {
                     mr_index[2,i]= "NA"}
                     
                } 
-        }
+  }
+write    
 return(mr_index)
 } 
 
