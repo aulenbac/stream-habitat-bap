@@ -22,7 +22,7 @@ metrics<- function() {
     #save the list of variables 
     write.csv(subSN, file="Data/SubSetOfMetricNames.csv", row.names=FALSE)
   
-    print(subSN)
+    #print(subSN)
     return(subSN)
     
     
