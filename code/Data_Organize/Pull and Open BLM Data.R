@@ -4,6 +4,9 @@ library(rgdal)
 library(downloader) 
 library(sp)
 
+wd=getwd()
+
+ 
 #URL Location of the AIM GeoDataBase if the location changes this will need to be updated 
 fileURL<- "https://gis.blm.gov/AIMDownload/LayerPackages/BLM_AIM_AquADat.zip"
 

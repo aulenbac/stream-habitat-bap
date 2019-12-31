@@ -1,3 +1,5 @@
+explore_data<-function(){ 
+
 library(shiny)
 library(tidyverse)
 library(leaflet)
@@ -179,3 +181,5 @@ output$map <-  renderLeaflet({
 
 
 shinyApp(server = server, ui=ui)
+
+} 

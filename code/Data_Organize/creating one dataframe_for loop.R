@@ -7,7 +7,7 @@ one_data_frame <- function() {
         
         
         #Load the list of metric names create from the metadata 
-        subSN<- read.csv("Data/SubSetOfMetricNames.csv") 
+        subSN<- read.csv(path.expand("Data/SubSetOfMetricNames.csv")) 
         
         #Create a variable holding the short names 
         CN= subSN$ShortName
@@ -69,21 +69,21 @@ one_data_frame <- function() {
         all_data2 = all_data %>%
                         filter(!is.na(BRLat) & !is.na(BRLong))
                         
-        
+        return(all_data2)
         
         #Write data to a .csv
         write.csv(all_data2, file="Data/All_Data.csv", row.names=FALSE)
         
         #Save to GEOJason 
-        locations <- data.frame(select(all_data2, one_of(c("BRLong", "BRLat"))))
+        #locations <- data.frame(select(all_data2, one_of(c("BRLong", "BRLat"))))
                             
-       # locations<-data.frame(c(all_data2$BRLong, all_data2$BRLat))
-        data<- select(all_data2, -contains("BR"))
-        spatial_data = SpatialPointsDataFrame(locations, data, proj4string = BLM_projection)
+         #locations<-data.frame(c(all_data2$BRLong, all_data2$BRLat))
+         #data<- select(all_data2, -contains("BR"))
+         #spatial_data = SpatialPointsDataFrame(locations, data, proj4string = BLM_projection)
         
-        writeOGR(spatial_data,'Data/data_all.geojson', layer="data" , driver="GeoJSON")
+        #writeOGR(spatial_data,'Data/data_all.geojson', layer="data" , driver="GeoJSON")
         
-
+        
 }
 
 

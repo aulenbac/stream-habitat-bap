@@ -16,7 +16,7 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 #install.packages("sp")
 #install.packages("sf")
 #install.packages("tidyverse")
-#install.packages("rgdal")
+install.packages("rgdal")
 #install.packages("formattable")
 #install.packages("kableExtra")
 install.packages("DT")
@@ -28,7 +28,9 @@ library(sp)
 library(sf)
 library(tidyverse)
 library(rgdal)
+
 library(rstudioapi)
+install.packages("RCurl")
 library(RCurl)
 library(ggplot2)
 library(formattable)
@@ -40,6 +42,9 @@ library(DT)
 library(gridExtra)
 library(kableExtra)
 
+install.packages("xlsx")
+library("xlsx")
+
 ```
 
 <h1>Background </h1>
@@ -50,10 +55,15 @@ To accelerate research and decision making data needs to be findable, accessible
 
 
 ```{r}
-program_info<-(read.xlsx("Data/Metadata.xlsx", 1))
+#install.packages("xlsx")
+#library(xlsx)
 
-kable(program_info) %>%
-    kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
+program_info<-(read.xlsx("Data/Metadata.xlsx", 1))
+head(program_info)
+
+
+#kable(program_info) %>%
+ #   kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
 
 ```
 

@@ -1,12 +1,12 @@
 #Create a subset of the metrics from the 4 programs to use in creating a dataframe and pulling data from the datasets to create one dataframe 
 
-#install.packages('tidyverse')
-#library(tidyverse)
-#library(openxlsx)
+install.packages('tidyverse')
+library(tidyverse)
+library(openxlsx)
 
 metrics<- function() {
     #Pull in the metadata file 
-    metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 2))
+    metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 3))
     SN <-select(metadata, c(Category, Name, ShortName,AREMPColumn, BLMColumn, EPAColumn, PIBOColumn))
     SN <- as_tibble(lapply(SN, as.character))
     

@@ -1,12 +1,12 @@
 #Script to pull EPA data
 
-#install.packages('RCurl')
-#library(RCurl)
+install.packages('RCurl')
+library(RCurl)
 
-#install.packages('tidyverse')
-#library(tidyverse)
+install.packages('tidyverse')
+library(tidyverse)
 
-#library(dplyr)
+library(dplyr)
 
 
 
@@ -34,5 +34,6 @@ Pull_EPA<- function(user_url) {
   EPA_Wadeable= filter(sub, sub$PROTOCOL=="WADEABLE")
   #Save the dataset in the repository data file 
   write.csv(EPA_Wadeable, file="Data/EPA_Subset.csv", row.names=FALSE)
+  return(EPA_Wadeable)
 } 
 
