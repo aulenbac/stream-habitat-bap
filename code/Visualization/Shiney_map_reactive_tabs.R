@@ -1,26 +1,48 @@
-explore_data<-function(){ 
+map_download<-function(){ 
 
+#install.packages('shiny', dependencies = TRUE)
 library(shiny)
+
+#install.packages('tidyverse')
 library(tidyverse)
+
+#install.packages('leaflet')
 library(leaflet)
+
+#install.packages('dplyr')
 library(dplyr)
+
+#install.packages('leaflet.extras')
 library(leaflet.extras)
+
+#install.packages('DT')
 library(DT)
+
+#install.packages('ggplot2')
 library(ggplot2)
 
-#Load the Data 
-data <- read.csv("C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019 Work/Code/tributary-habitat-data-sharing-/Data/All_Data_with_NVCS.csv")
-#remove the data collection points with out lat, long
-data <-data %>% drop_na(BRLong) %>% drop_na(BRLat)
+# This should work, but for some reason I can't figure it out
+#wd<- getwd()
+#file<- paste0(wd,"/Data/All_Data_with_NVCS.csv")
+
+# Can't figure out how to retreive WD and paste into a R file name?
+wd <- "C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019 Work/Code/tributary-habitat-data-sharing-/"
+file<- paste(wd,"Data/All_Data_with_NVCS.csv", sep='')
+data <- read.csv(file)
+#data <- read.csv("C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019 Work/Code/tributary-habitat-data-sharing-/Data/All_Data_with_NVCS.csv")
+
+
+#remove the data collection points with blanks lat, long
+data         <-data %>% drop_na(BRLong) %>% drop_na(BRLat)
 nvcs_list    <- levels(data$nvcs_subclass)
 
-#Load the metric list 
-metrics_list <- read.csv("C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019 Work/Code/tributary-habitat-data-sharing-/Data/SubSetOfMetricNames.csv")
+#Load the metric list
+metrics_file  <- paste0(wd,"/Data/SubSetOfMetricNames.csv")
+metrics_list  <- as_tibble(read.csv(metrics_file))
+
 
 #Load the pallet for the map 
 pal <- colorFactor(rainbow(3), data$Program)
-
-
 
 ui<- navbarPage(
             "Stream Habitat",
@@ -33,18 +55,18 @@ ui<- navbarPage(
                         #Create a drop down with the NVCS ecosystems 
                         selectInput(inputId ="e_id", label= "Choose a NVCS ecosystesm", 
                                     choices=(nvcs_list), selected ='' ), 
-                        selectInput(inputId='metric', label="Select Metric", choices=metrics_list$ShortName[8:20], selected=''),
+                        selectInput(inputId='metric', label="Select Metric", choices=metrics_list$ShortName[c(13,17,18)], selected='PctPool'),
                         plotOutput("hist", height = 200), 
-                        selectInput(inputId='metric_y', label="Select Metric Y", choices=metrics_list$ShortName[8:20], selected='Grad'),
+                        selectInput(inputId='metric_y', label="Select Stream Power", choices=metrics_list$ShortName[8:11], selected='Grad'),
                         plotOutput("plot", height = 200)
                                           )),
                 #a tab for the metric descriptions 
-                tabPanel("Metric Description", tableOutput("Metrics")), 
+                tabPanel("Method Description", dataTableOutput("Methods")), 
                 # a tab for downloading data  
-               tabPanel("Explore Data", 
+                tabPanel("Explore Data", 
                         sidebarLayout(
-                          sidebarPanel(downloadButton("downloadData", "Download")),   
-                          mainPanel(DT::dataTableOutput('table'))
+                            sidebarPanel(downloadButton("downloadData", "Download")),   
+                            mainPanel(DT::dataTableOutput('table'))
                                       )
                 
                 ))
@@ -53,9 +75,24 @@ ui<- navbarPage(
 server <- function(input, output) { 
  # Create the map 
 
- # When a user starts the map show all the points, then filter to a subset of sites based on users seletion 
+  output$map <-  renderLeaflet({
+    data%>% 
+      filter(nvcs_subclass==input$e_id) %>%
+      leaflet() %>%
+      addTiles() %>%
+      addCircles(lng=~BRLong, lat= ~BRLat, color=~pal(Program), 
+                 popup= ~paste0("<b>",  Program, "</b>", 
+                                "<br>", "<b>", "ReachID ", "</b>",  ReachID, "</br>",
+                                "<br>", "<b>", "SiteID ", "</b>",SiteID,  "</br>",
+                                "<br>", "<b>", "Year ", "</b>", Year,    "</br>",
+                                "<br>", "<b>", "Date ", "</b>", Date,    "</br>", 
+                                "<br>", "<b>", "NVCS Data ", "</b>", nvcs_subclass, "</br>")) %>%
+      addLegend("topleft", pal=pal, values= ~Program, opacity =1)
+  })
   
-
+  
+ # When a user starts the map show all the points, then filter to a subset of sites based on users seletion, I can't figure out how to make this work. Below is my attempt 
+  
 #   if (input$e_id=='') {
    
 #   output$map <-  renderLeaflet({
@@ -91,36 +128,9 @@ server <- function(input, output) {
 #               addLegend("topleft", pal=pal, values= ~Program, opacity =1)
 #           })
 #    }
-  
-#filter(nvcs_subclass==input$e_id) %>%  
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 
- # dataInput <- reactive({
-  #  if(inpuet$e_id== "") {
-   #   return(data) 
-    #} else { 
-#      return(data %>% filter(nvcs_subclass==input$e_id)) 
-#    }
-#  })
-
-#dataInput<- reactive ({data %>% filter(nvcs_subclass==input$e_id)})  
-  
-output$map <-  renderLeaflet({
-     data%>% 
-     filter(nvcs_subclass==input$e_id) %>%
-     leaflet() %>%
-     addTiles() %>%
-     addCircles(lng=~BRLong, lat= ~BRLat, color=~pal(Program), 
-               popup= ~paste0("<b>",  Program, "</b>", 
-                              "<br>", "<b>", "ReachID ", "</b>",  ReachID, "</br>",
-                              "<br>", "<b>", "SiteID ", "</b>",SiteID,  "</br>",
-                              "<br>", "<b>", "Year ", "</b>", Year,    "</br>",
-                               "<br>", "<b>", "Date ", "</b>", Date,    "</br>", 
-                              "<br>", "<b>", "NVCS Data ", "</b>", nvcs_subclass, "</br>")) %>%
-     addLegend("topleft", pal=pal, values= ~Program, opacity =1)
- })
-  
-  
-       #create simple scatter plot 
+   #create simple scatter plot 
        output$plot<- renderPlot({
               nvcs_ec = data %>% 
                    filter(nvcs_subclass==input$e_id)%>%
@@ -129,7 +139,7 @@ output$map <-  renderLeaflet({
                  #plot(nvcs_ec)
          })
        
-       #create a histogram 
+    #create a histogram 
         output$hist <- renderPlot({
                         nvcs_h = data %>% 
                          filter(nvcs_subclass==input$e_id)%>%
@@ -139,35 +149,31 @@ output$map <-  renderLeaflet({
                   qplot(nvcs_h[,1], geom='histogram')
                   })
        
-# Create a table of metrics 
-       # output$metrics <-renderTable { 
+#Second Tab to pull method data from MR.org using the APIs 
+        file<- paste(wd,"Code/data_organize/metric_documentation.R", sep='')
+        source(file)
+    
+  #Need help formating the html table 
+    output$Methods <- DT:: renderDataTable (DT::datatable({ 
+        method <- metric_information(input$metric)
+        method
+        }))
+
         
-        #source("Code/data_organize/metric_documentation.R")
-        #PctPoolMetadata <- metric_information(imput$metric)
-        #print(PctPoolMetadata)
+# Third tab table and data download 
         
-        #kable(PctPoolMetadata)%>%
-        #  kable_styling(bootstrap_options = c("striped", "hover", fixed_header=TRUE ))
-        #} 
-        
-        
-          
-        download_data<- reactive({return(download_data= data.frame(data%>% 
-                                 filter(nvcs_subclass==input$e_id)))
-                       })
-        
-         # create a table 
-         #output$table<- renderDataTable({
-          #            data %>% 
-           #           filter(nvcs_subclass==input$e_id)%>%
-            #          select(input$metric, input$metric_y) 
+         # create a table to output on the thrid tab 
+         output$table<- renderDataTable({
+                   data %>% 
+                    filter(nvcs_subclass==input$e_id)
+            })
       
-        # create a table 
-        output$table<- renderDataTable({download_data}) 
-        
-        #output$table <- renderTable({download_data})
-           
-        # Downloadable csv of selected dataset ----
+         # Downloadable csv of selected dataset ----
+         download_data<- reactive({
+                        return(download_data= data.frame(data%>% 
+                                 filter(nvcs_subclass==input$e_id)))
+                      })
+         
           output$downloadData <- downloadHandler(
             filename = function() {
               paste(input$metric, ".csv", sep = "")
@@ -175,11 +181,11 @@ output$map <-  renderLeaflet({
             content = function(file) {
                write.csv(download_data(), file, row.names = TRUE)
              })
+         
        
       }
-
-
 
 shinyApp(server = server, ui=ui)
 
 } 
+
