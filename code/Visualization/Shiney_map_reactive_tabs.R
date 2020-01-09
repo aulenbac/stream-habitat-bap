@@ -29,8 +29,9 @@ library(ggplot2)
 wd <- "C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019 Work/Code/tributary-habitat-data-sharing-/"
 file<- paste(wd,"Data/All_Data_with_NVCS.csv", sep='')
 data <- read.csv(file)
-#data <- read.csv("C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019 Work/Code/tributary-habitat-data-sharing-/Data/All_Data_with_NVCS.csv")
 
+
+#data <- read.csv("/Data/All_Data_with_NVCS.csv")
 
 #remove the data collection points with blanks lat, long
 data         <-data %>% drop_na(BRLong) %>% drop_na(BRLat)

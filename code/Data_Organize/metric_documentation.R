@@ -6,15 +6,8 @@ metric_information <-function(metric_name) {
   library(openxlsx)
 
 
-  
-  # This should work, but I can't get it to work? 
-  wd= getwd()
-  file_metadata<- paste0(wd,"Data/Metadata.xlsx")
-  # wd <- "C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019 Work/Code/tributary-habitat-data-sharing-"
-  #file_metadata <- paste0(wd,"/Data/Metadata.xlsx")
-
-  metadata <-as_tibble(read.xlsx(file_metadata, 3)) #read in the metadata 
-  
+  metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 3)) #read in the metadata 
+ 
   metric_index<- filter(metadata, ShortName==metric_name)
   mr_index <- data.frame(select(metric_index, contains('ShortName')), select(metric_index, contains('CollectionMethod')))
 
