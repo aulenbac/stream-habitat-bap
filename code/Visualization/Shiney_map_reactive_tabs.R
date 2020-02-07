@@ -1,4 +1,4 @@
-map_download<-function(){ 
+#map_download<-function(){ 
 
 #install.packages('shiny', dependencies = TRUE)
 library(shiny)
@@ -188,5 +188,5 @@ server <- function(input, output) {
 
 shinyApp(server = server, ui=ui)
 
-} 
+#} 
 

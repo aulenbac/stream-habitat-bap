@@ -1,18 +1,16 @@
 #Script to pull EPA data
-
 install.packages('RCurl')
 library(RCurl)
-
 install.packages('tidyverse')
 library(tidyverse)
-
 library(dplyr)
 
 
 
 Pull_EPA<- function(user_url) { 
-  #Pull the data set for NRSA 0809 Physical Habitat Larger Set of Metrics - Data (CSV)(1 pg, 4 MB) from
-  #WEBPAGE https://www.epa.gov/national-aquatic-resource-surveys/data-national-aquatic-resource-surveys
+  # Pull the data set for NRSA 0809 Physical Habitat Larger Set of Metrics - Data (CSV)(1 pg, 4 MB) from
+  # WEBPAGE https://www.epa.gov/national-aquatic-resource-surveys/data-national-aquatic-resource-surveys
+  
   ld_download <- getURL(user_url)
   
   large_data  <- tbl_df(read.csv (text=ld_download))
@@ -32,8 +30,9 @@ Pull_EPA<- function(user_url) {
   
   #Remove all botable data, creating a subset of data that only contains the wadable stream data protocol 
   EPA_Wadeable= filter(sub, sub$PROTOCOL=="WADEABLE")
+  
   #Save the dataset in the repository data file 
-  write.csv(EPA_Wadeable, file="Data/EPA_Subset.csv", row.names=FALSE)
-  return(EPA_Wadeable)
+    write.csv(EPA_Wadeable, file="Data/EPA_Subset.csv", row.names=FALSE)
+    return(EPA_Wadeable)
 } 
 
