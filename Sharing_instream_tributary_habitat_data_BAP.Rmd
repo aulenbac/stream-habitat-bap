@@ -1,9 +1,9 @@
 ---
 title: "BAP"
 output:
-  word_document: default
-  pdf_document: default
   html_notebook: default
+  pdf_document: default
+  word_document: default
 ---
 
 
@@ -36,6 +36,10 @@ library(ggplot2)
 library(formattable)
 library(htmltools)
 
+#Packages to interact with ScienceBase 
+install.packages("sbtools")
+library(sbtools)
+
 #Packages to create well formated tables in RStuido 
 library(knitr)
 library(DT)
@@ -55,10 +59,10 @@ To accelerate research and decision making data needs to be findable, accessible
 
 
 ```{r}
-#install.packages("xlsx")
-#library(xlsx)
+install.packages("readxl")
+library(readxl)
 
-program_info<-(read.xlsx("Data/Metadata.xlsx", 1))
+program_info <- (read_excel("Data/Metadata.xlsx", 1))
 head(program_info)
 
 
@@ -92,28 +96,32 @@ kable(metrics_list)%>%
 
 <h1>Data Sources</h1> 
 <h2>Metric Data</h2>
-Two of the four habitat programs store metric level data online. We pull that data from the sourcs to be used to create a singular data set for mapping and analysis. 
+Three of the four habitat programs store metric level data online, each program stores data in a different and unique way, below is the code to  We pull that data from the sourcs to be used to create a singular data set for mapping and analysis. 
 
 <h3> BLM AIM Data </h3>
-The BLM AIM collects data across BLM lands. BLM data is stored as a geodatabase at !!!!!!!. 
+The BLM AIM collects data across BLM lands
 
 
 ```{r}
 
-#URL Location of the AIM GeoDataBase if the location changes this will need to be updated 
-fileURL<- "https://gis.blm.gov/AIMDownload/LayerPackages/BLM_AIM_AquADat.zip"
+library(sf)
+library(tmap)
+library(httr)
+library(data.table)
 
-#Download the file to the Data file
-download(fileURL, "Data/BLM.zip" )
 
-#Unzip the file into the Data File 
-unzip("Data/BLM.zip", exdir="Data")
 
-#Define the file path to the geodata base, if the BLM changes their file structure this will need to be updated 
-fgdb=path.expand('Data/BLM_AIM_AquADat/v104/AquADat_data.gdb')
-
-#Read the Geodatabase layer into a file 
-BLM <- data.frame(readOGR(dsn=fgdb))
+url <- list(hostname = "gis.blm.gov/arcgis/rest/services",
+  scheme = "https",
+  path = "hydrography/BLM_Natl_AIM_AquADat/MapServer/0/query",
+  query = list(
+          where = "1=1",
+          outFields = "*",
+          returnGeometry = "true",
+          f = "geojson")) %>% 
+      setattr("class", "url")
+request <- build_url(url)
+BLM <- st_read(request) 
 
 #write the datafile to the datafile in the repository
 write.csv(BLM,"Data/BLM.csv")
@@ -192,43 +200,14 @@ data %>%
 ```{r}
 ggplot(data, aes(PctPool))+geom_histogram()+facet_wrap(~Program)
 ```
+<h1> Explore In Stream Tributary Habitat Data</h1>
 
+As a proof of concept for this analysis package, we picked 2-3 metrics (category of metrics?) as a test case to build a data dictionary, intergrade data from multiple sources and design infrastructure to serve data to interested parties. We selected metrics that are responsive to management decisions, have low measure error as defined in the lititure (Kershner and Roper 2010, ##add other references), the method comparison (insert link ) work completed by this group. Special consideration was given to metrics identified in the speed dating exercise speed dating exercise as of high importance by the three programs.
 ```{r}
-#library(shiny)
-
-#h = ggplot(data, aes(PctPool))+geom_histogram()
-
-# Define UI for application that draws a histogram
-#ui <- fluidPage(
-
-  # App title ----
-  #titlePanel("Pools"),
-
-  # Sidebar layout with input and output definitions ----
-  #sidebarLayout(
-
-    # Sidebar panel for inputs ----
-   # sidebarPanel(
-
-      # Input: Slider for the number of bins ----
-    #  sliderInput(inputId = "bins",
-     #             label = "Number of bins:",
-      #            min = min(data$PctPool, na.rm=T),
-       #           max = max(data$PctPool, na.rm=T),
-        #          value = 10)
-
-    #),
-
-    # Main panel for displaying outputs ----
-#    mainPanel(
-
-      # Output: Histogram ----
- #     plotOutput(outputId = "h")
-#
- # )
-#)
-
-#ui
+wd <- getwd()
+file<- paste0(wd,"/Code/Visualization/Shiney_map_reactive_tabs.R")
+source(file)
+map_download()
 ```
 ```{r}
 
