@@ -1,5 +1,6 @@
-#install.packages("rgdal")
-#install.packages("downloader")
+install.packages("rgdal")
+install.packages("downloader")
+install.packages('sp')
 library(rgdal)
 library(downloader) 
 library(sp)
@@ -25,6 +26,6 @@ BLM_geo<- readOGR(dsn=fgdb)
 BLM_projection <- BLM_geo@proj4string
 BLM <- BLM_geo@data
 #write the datafile to the datafile in the repository
-write.csv(BLM,"Data/BLM.csv")
+write.csv(BLM,"Data/BLM_geodatabase.csv")
 
   
