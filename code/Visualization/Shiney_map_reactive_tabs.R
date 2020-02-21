@@ -26,16 +26,17 @@ library(ggplot2)
 #file<- paste0(wd,"/Data/All_Data_with_NVCS.csv")
 
 # Can't figure out how to retreive WD and paste into a R file name?
-wd <- "C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019 Work/Code/tributary-habitat-data-sharing-/"
-file<- paste(wd,"Data/All_Data_with_NVCS.csv", sep='')
+wd <- "C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019_2020/Code/tributary-habitat-data-sharing-/"
+#file<- paste(wd,"Data/All_Data_with_NVCS.csv", sep='')
+file<- paste0(wd,"Data/All_Data.csv")
 data <- read.csv(file)
-
+#data <- read.csv("Data/All_Data.csv")
 
 #data <- read.csv("/Data/All_Data_with_NVCS.csv")
 
 #remove the data collection points with blanks lat, long
 data         <-data %>% drop_na(BRLong) %>% drop_na(BRLat)
-nvcs_list    <- levels(data$nvcs_subclass)
+nvcs_list    <- levels(data$Program)
 
 #Load the metric list
 metrics_file  <- paste0(wd,"/Data/SubSetOfMetricNames.csv")
@@ -55,10 +56,10 @@ ui<- navbarPage(
                         width = 'auto', height = "auto",
                         #Create a drop down with the NVCS ecosystems 
                         selectInput(inputId ="e_id", label= "Choose a NVCS ecosystesm", 
-                                    choices=(nvcs_list), selected ='' ), 
-                        selectInput(inputId='metric', label="Select Metric", choices=metrics_list$ShortName[c(13,17,18)], selected='PctPool'),
+                                   choices=(nvcs_list), selected ='' ), 
+                        selectInput(inputId='metric', label="Select Metric", choices=metrics_list$ShortName[c(14:30)], selected='PctPool'),
                         plotOutput("hist", height = 200), 
-                        selectInput(inputId='metric_y', label="Select Stream Power", choices=metrics_list$ShortName[8:11], selected='Grad'),
+                        selectInput(inputId='metric_y', label="Select Stream Power", choices=metrics_list$ShortName[9:13], selected='Grad'),
                         plotOutput("plot", height = 200)
                                           )),
                 #a tab for the metric descriptions 
@@ -78,7 +79,7 @@ server <- function(input, output) {
 
   output$map <-  renderLeaflet({
     data%>% 
-      filter(nvcs_subclass==input$e_id) %>%
+      filter(Program==input$e_id) %>%
       leaflet() %>%
       addTiles() %>%
       addCircles(lng=~BRLong, lat= ~BRLat, color=~pal(Program), 
@@ -87,7 +88,7 @@ server <- function(input, output) {
                                 "<br>", "<b>", "SiteID ", "</b>",SiteID,  "</br>",
                                 "<br>", "<b>", "Year ", "</b>", Year,    "</br>",
                                 "<br>", "<b>", "Date ", "</b>", Date,    "</br>", 
-                                "<br>", "<b>", "NVCS Data ", "</b>", nvcs_subclass, "</br>")) %>%
+                                "<br>")) %>%
       addLegend("topleft", pal=pal, values= ~Program, opacity =1)
   })
   
@@ -133,22 +134,22 @@ server <- function(input, output) {
 
    #create simple scatter plot 
        output$plot<- renderPlot({
-              nvcs_ec = data %>% 
-                   filter(nvcs_subclass==input$e_id)%>%
-                   select(input$metric,input$metric_y, "Program")
-              ggplot(nvcs_ec, aes(x=nvcs_ec[,1], y=nvcs_ec[,2], color=Program))+geom_point()
-                 #plot(nvcs_ec)
+             nvcs_ec = data %>% 
+                   filter(Program==input$e_id)%>%
+                  select(input$metric,input$metric_y, "Program")
+            ggplot(nvcs_ec, aes(x=nvcs_ec[,1], y=nvcs_ec[,2], color=Program))+geom_point()
+                 plot(nvcs_ec)
          })
        
     #create a histogram 
-        output$hist <- renderPlot({
-                        nvcs_h = data %>% 
-                         filter(nvcs_subclass==input$e_id)%>%
-                         select(input$metric, "Program") 
+       output$hist <- renderPlot({
+                       nvcs_h = data %>% 
+                       filter(Program==input$e_id)%>%
+                      select(input$metric, "Program") 
                   #ggplot(nvcs_h, aes(nvcs_h[1]))+geom_histogram()+facet_wrap(~Program)
                 #  ggplot(nvcs_h, aes(input$metric))+ geom_point()+facet_wrap(~Program)
-                  qplot(nvcs_h[,1], geom='histogram')
-                  })
+               qplot(nvcs_h[,1], geom='histogram')
+              })
        
 #Second Tab to pull method data from MR.org using the APIs 
         file<- paste(wd,"Code/data_organize/metric_documentation.R", sep='')
@@ -166,13 +167,13 @@ server <- function(input, output) {
          # create a table to output on the thrid tab 
          output$table<- renderDataTable({
                    data %>% 
-                    filter(nvcs_subclass==input$e_id)
+                    filter(Program==input$e_id)
             })
       
          # Downloadable csv of selected dataset ----
          download_data<- reactive({
                         return(download_data= data.frame(data%>% 
-                                 filter(nvcs_subclass==input$e_id)))
+                                 filter(Program==input$e_id)))
                       })
          
           output$downloadData <- downloadHandler(
