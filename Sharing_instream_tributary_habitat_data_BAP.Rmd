@@ -144,8 +144,8 @@ EPA collects data across the Unites States and publised their metric level data 
 For mapping and analysis we build one dataframe with all data sourcs. 
 
 ```{r}
-source("Code/data_organize/creating one dataframe_for loop.R")
-one_data_frame()
+#source("Code/data_organize/creating one dataframe_for loop.R")
+#one_data_frame()
 data<- read.csv("Data/All_Data.csv") 
 ```
 

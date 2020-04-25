@@ -15,7 +15,6 @@ wd=getwd()
 
 projection<- "+proj=longlat +datum=WGS84 +no_defs"
 
-
 #URL for the zip file containing the AREMP geodatabase 
 fileURL<- "https://www.fs.fed.us/r6/reo/monitoring/watershed/NwfpWatershedCondition20yrReport.gdb.zip"
 

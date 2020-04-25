@@ -2,22 +2,16 @@
 
 #install.packages('shiny', dependencies = TRUE)
 library(shiny)
-
 #install.packages('tidyverse')
 library(tidyverse)
-
 #install.packages('leaflet')
 library(leaflet)
-
 #install.packages('dplyr')
 library(dplyr)
-
 #install.packages('leaflet.extras')
 library(leaflet.extras)
-
 #install.packages('DT')
 library(DT)
-
 #install.packages('ggplot2')
 library(ggplot2)
 
@@ -35,7 +29,7 @@ data <- read.csv(file)
 #data <- read.csv("/Data/All_Data_with_NVCS.csv")
 
 #remove the data collection points with blanks lat, long
-data         <-data %>% drop_na(BRLong) %>% drop_na(BRLat)
+data         <-data %>% drop_na(verbatimLongitude) %>% drop_na(verbatimLatitude)
 nvcs_list    <- levels(data$Program)
 
 #Load the metric list
@@ -57,9 +51,9 @@ ui<- navbarPage(
                         #Create a drop down with the NVCS ecosystems 
                         selectInput(inputId ="e_id", label= "Choose a NVCS ecosystesm", 
                                    choices=(nvcs_list), selected ='' ), 
-                        selectInput(inputId='metric', label="Select Metric", choices=metrics_list$ShortName[c(14:30)], selected='PctPool'),
+                        selectInput(inputId='metric', label="Select Metric", choices=metrics_list$Field[c(14:30)], selected='PctPool'),
                         plotOutput("hist", height = 200), 
-                        selectInput(inputId='metric_y', label="Select Stream Power", choices=metrics_list$ShortName[9:13], selected='Grad'),
+                        selectInput(inputId='metric_y', label="Select Stream Power", choices=metrics_list$Field[9:13], selected='Grad'),
                         plotOutput("plot", height = 200)
                                           )),
                 #a tab for the metric descriptions 
@@ -79,18 +73,20 @@ server <- function(input, output) {
 
   output$map <-  renderLeaflet({
     data%>% 
-      filter(Program==input$e_id) %>%
+    filter(Program==input$e_id) %>%
       leaflet() %>%
       addTiles() %>%
-      addCircles(lng=~BRLong, lat= ~BRLat, color=~pal(Program), 
+      addCircles(lng=~verbatimLongitude, lat= ~verbatimLatitude, color=~pal(Program), 
                  popup= ~paste0("<b>",  Program, "</b>", 
-                                "<br>", "<b>", "ReachID ", "</b>",  ReachID, "</br>",
-                                "<br>", "<b>", "SiteID ", "</b>",SiteID,  "</br>",
+                                "<br>", "<b>", "eventID ", "</b>",  SiteId, "</br>",
+                                "<br>", "<b>", "verbatimLocation ", "</b>",ReachID,  "</br>",
                                 "<br>", "<b>", "Year ", "</b>", Year,    "</br>",
-                                "<br>", "<b>", "Date ", "</b>", Date,    "</br>", 
+                                "<br>", "<b>", "verbatimEventDate ", "</b>", Date,    "</br>", 
                                 "<br>")) %>%
       addLegend("topleft", pal=pal, values= ~Program, opacity =1)
-  })
+ 
+    
+     })
   
   
  # When a user starts the map show all the points, then filter to a subset of sites based on users seletion, I can't figure out how to make this work. Below is my attempt 
@@ -101,10 +97,10 @@ server <- function(input, output) {
 #     data%>%
 #       leaflet() %>%
 #       addTiles() %>%
-#       addCircles(lng=~BRLong, lat= ~BRLat, color=~pal(Program), 
+#       addCircles(lng=~verbatimLongitude, lat= ~verbatimLatitude, color=~pal(Program), 
 #                  popup= ~paste0("<b>",  Program, "</b>", 
-#                                 "<br>", "<b>", "ReachID ", "</b>",  ReachID, "</br>",
-#                                 "<br>", "<b>", "SiteID ", "</b>",SiteID,  "</br>",
+#                                 "<br>", "<b>", "eventID ", "</b>",  eventID, "</br>",
+#                                 "<br>", "<b>", "verbatimLocation ", "</b>",verbatimLocation,  "</br>",
 #                                 "<br>", "<b>", "Year ", "</b>", Year,    "</br>",
 #                                 "<br>", "<b>", "Date ", "</b>", Date,    "</br>", 
 #                                 "<br>", "<b>", "NVCS Data ", "</b>", nvcs_subclass, "</br>")) %>%
@@ -120,10 +116,10 @@ server <- function(input, output) {
 #               filter(nvcs_subclass==input$e_id) %>%  
 #               leaflet() %>%
 #               addTiles() %>%
-#               addCircles(lng=~BRLong, lat= ~BRLat, color=~pal(Program), 
+#               addCircles(lng=~verbatimLongitude, lat= ~verbatimLatitude, color=~pal(Program), 
 #                         popup= ~paste0("<b>",  Program, "</b>", 
-#                                         "<br>", "<b>", "ReachID ", "</b>",  ReachID, "</br>",
-#                                         "<br>", "<b>", "SiteID ", "</b>",SiteID,  "</br>",
+#                                         "<br>", "<b>", "eventID ", "</b>",  eventID, "</br>",
+#                                         "<br>", "<b>", "verbatimLocation ", "</b>",verbatimLocation,  "</br>",
 #                                         "<br>", "<b>", "Year ", "</b>", Year,    "</br>",
 #                                         "<br>", "<b>", "Date ", "</b>", Date,    "</br>", 
 #                                         "<br>", "<b>", "NVCS Data ", "</b>", nvcs_subclass, "</br>")) %>%

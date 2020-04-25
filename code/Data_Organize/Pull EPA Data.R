@@ -13,30 +13,40 @@ library(sf)
   # Pull the data set for NRSA 0809 Physical Habitat Larger Set of Metrics - Data (CSV)(1 pg, 4 MB) from
   # WEBPAGE https://www.epa.gov/national-aquatic-resource-surveys/data-national-aquatic-resource-surveys
   
-  #user_url<-"https://www.epa.gov/sites/production/files/2014-10/phabbest.csv"
+#Download the habitat date file  
   user_url <- "https://www.epa.gov/sites/production/files/2015-09/phabmed.csv"
-  
   ld_download <- getURL(user_url)
   
-  #create a data frame of the EPA data 
-  large_data  <- tbl_df(read.csv (text=ld_download))
+#create a data frame of the EPA physical habitat data 
+  habitat  <- tbl_df(read.csv (text=ld_download))
   
-  #Pull the 20x macrointerverbrate data 
-  macro_url <- getURL("https://www.epa.gov/sites/production/files/2015-09/bentcond.csv")
+#Download locations 
+  locations_URL <-getURL('https://www.epa.gov/sites/production/files/2015-09/siteinfo_0.csv')
+  locations  <- tbl_df(read.csv(text=locations_URL))
+
+#Join locations and habitat 
+  large_data<-right_join(locations, habitat, by=c("UID","SITE_ID","VISIT_NO", "YEAR"))
+  
+#Remove columens with .y 
+  macro_habitat <- select(large_data, -contains(".y"))
+#Rename columens with .x 
+  names(large_data) <- str_remove(names(large_data), ".x")
+  
+#Download the the macrointerverbrate data from the EPA website 
+  macro_url <- getURL("https://www.epa.gov/sites/production/files/2015-09/extbenthicrefcond.csv")
   macro_data <- tbl_df(read.csv (text=macro_url))
   
 #join the habitat data to the macroinverterbrate data 
-   macro_habitat <- full_join(large_data, macro_data, by ="UID")
-   setnames(macro_habitat, "SITE_ID.x", "SITE_ID") 
+   macro_habitat <- full_join(large_data, macro_data, by =c("SITE_ID", 'VISIT_NO', 'YEAR', 'UID'))
 
-#rename column heads in the joined file so the columns match the metadata in the metadata file 
-   names(macro_habitat)[names(macro_habitat) == "SITE_ID.x"] <- "SITE_ID"
-   names(macro_habitat)[names(macro_habitat) == "VISIT_NO.x"] <- "VISIT_NO"
-   names(macro_habitat)[names(macro_habitat) == "DATE_COL.x"] <- "DATE_COL"
-   names(macro_habitat)[names(macro_habitat) == "YEAR.x"] <- "YEAR"
+#Remove columens with .y 
+   macro_habitat <- select(macro_habitat, -contains(".y"))
    
-   
-  #Load the list of metric names create from the metadata 
+#Rename columens with .x 
+  names(macro_habitat) <- str_remove(names(macro_habitat), ".x")
+
+#Load the list of metric names create from the metadata 
+
  # subSN<- read.csv("Data/SubSetOfMetricNames.csv") 
   
   #A vector of metric names from the EPA data 
@@ -54,7 +64,8 @@ library(sf)
               filter(PROTOCOL=="WADEABLE")
   
 #Save the dataset in the repository data file 
-   write.csv(EPA_Wadeable, file="Data/EPA_Subset.csv", row.names=FALSE)
+  wd <- "C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019_2020/Code/tributary-habitat-data-sharing-"
+  write.csv(EPA_Wadeable, file=paste0(wd,"/Data/EPA_Subset.csv"), row.names=FALSE)
 
  #create a geoJSON file of the EPA data 
 

@@ -1,12 +1,15 @@
+
 metric_information <-function(metric_name) {
   
-  install.packages("jsonlite")
-  install.package("openxlsx")
-  library(jsonlite)
-  library(openxlsx)
+  #install.packages("jsonlite")
+  #install.package("openxlsx")
+  #library(jsonlite)
+  #library(openxlsx)
+  #library(tidyverse)
 
-
-  metadata <-as_tibble(read.xlsx("Data/Metadata.xlsx", 3)) #read in the metadata 
+  wd= wd <- "C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019_2020/Code/tributary-habitat-data-sharing-/"
+  file<- paste0(wd,"Data/Metadata.xlsx")
+  metadata <-as_tibble(read.xlsx(file, 3)) #read in the metadata 
  
   metric_index<- filter(metadata, ShortName==metric_name)
   mr_index <- data.frame(select(metric_index, contains('ShortName')), select(metric_index, contains('CollectionMethod')))
