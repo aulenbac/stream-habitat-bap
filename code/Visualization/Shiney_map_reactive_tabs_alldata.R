@@ -19,7 +19,6 @@ library(ggplot2)
 
 # Can't figure out how to retreive WD and paste into a R file name?
 wd <- "C:/Users/rscully/Documents/Projects/Habitat Data Sharing/2019_2020/Code/tributary-habitat-data-sharing-/"
-#file<- paste(wd,"Data/All_Data_with_NVCS.csv", sep='')
 file<- paste0(wd,"Data/All_Data.csv")
 data <- read.csv(file)
 
