@@ -1,0 +1,13 @@
+name: Visualization
+title: Visualization
+username:
+account: streamhabitat
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2195833
+bundleId: 3072798
+url: https://streamhabitat.shinyapps.io/Visualization/
+when: 1588007578.87099
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Shiney_map_reactive_tabs_NVCS.R|Simple_Map.R
